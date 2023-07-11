@@ -4,7 +4,7 @@ lodestar_user: lodestar
 lodestar_group: "{{ lodestar_user }}"
 
 # Directory paths
-lodestart_image: "chainsafe/lodestar"
+lodestar_image: "chainsafe/lodestar"
 lodestar_version: "latest"
 lodestar_base_dir: "/opt/lodestar"
 lodestar_data_dir: "{{ lodestar_base_dir }}/data"
