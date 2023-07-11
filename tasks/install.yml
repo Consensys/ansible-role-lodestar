@@ -4,6 +4,7 @@
     name: "{{ lodestar_group }}"
     state: present
   become: true
+  register: lodestar_group_details
 
 - name: Create lodestar user
   user:
@@ -11,6 +12,7 @@
     name: "{{ lodestar_user }}"
     group: "{{ lodestar_group }}"
   become: true
+  register: lodestar_user_details
 
 - name: Create directories
   file:
@@ -22,7 +24,6 @@
     - "{{ lodestar_base_dir }}"
     - "{{ lodestar_config_dir }}"    
     - "{{ lodestar_data_dir }}"
-    - "{{ lodestar_data_beacon_dir }}"
     - "{{ lodestar_log_dir }}"
   become: true
 

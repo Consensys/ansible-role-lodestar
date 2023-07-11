@@ -3,16 +3,11 @@ version: '3.6'
 services:
   - name: lodestar-beacon
     image: "{{ lodestart_image }}:{{ lodestar_version }}"
-
-    user: "{{ consensus_client_user.uid}}:{{ consensus_client_group.gid }}"
-    group_add:
-      - "{{ jwt_secret_access_group.gid }}"    
-    security_opt:
-      - no-new-privileges
+    user: "{{ lodestar_user_details.uid}}:{{ lodestar_group_details.gid }}"
     ports:
       - {{ lodestar_p2p_port }}:{{ lodestar_p2p_port }}/tcp 
       - {{ lodestar_p2p_port }}:{{ lodestar_p2p_port }}/udp
-{% if consensus_client_metrics_enabled|bool == True  %}
+{% if lodestar_metrics_enabled|bool == True  %}
       - 127.0.0.1:{{lodestar_metrics_port}}:{{lodestar_metrics_port}}
 {% endif %}
 {% if lodestar_rest_enabled|bool == True  %}
