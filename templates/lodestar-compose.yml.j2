@@ -4,6 +4,7 @@ services:
   lodestar-beacon:
     container_name: lodestar-beacon
     image: "{{ lodestar_image }}:{{ lodestar_version }}"
+    restart: always
     user: "{{ lodestar_user_details.uid}}:{{ lodestar_group_details.gid }}"
     ports:
       - {{ lodestar_p2p_port }}:{{ lodestar_p2p_port }}/tcp 
@@ -52,6 +53,7 @@ services:
   lodestar-validator:
     container_name: lodestar-validator
     image: "{{ lodestar_image }}:{{ lodestar_version }}"
+    restart: always
     user: "{{ lodestar_user_details.uid}}:{{ lodestar_group_details.gid }}"
     depends_on:
       - lodestar-beacon
