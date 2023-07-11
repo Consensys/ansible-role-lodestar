@@ -2,7 +2,7 @@ version: '3.6'
 
 services:
   lodestar-beacon:
-    name: lodestar-beacon
+    container_name: lodestar-beacon
     image: "{{ lodestart_image }}:{{ lodestar_version }}"
     user: "{{ lodestar_user_details.uid}}:{{ lodestar_group_details.gid }}"
     ports:
@@ -30,15 +30,15 @@ services:
       --port={{ lodestar_p2p_port }}
       --execution.urls={{ lodestar_execution_urls }}
       --checkpointSyncUrl={{ lodestar_checkpoint_sync_url }}
-{% if lodestar_default_fee_recipient == ""  %}
+{% if lodestar_default_fee_recipient != ""  %}
       --suggestedFeeRecipient={{ lodestar_default_fee_recipient }}
 {% endif %}
 {% if lodestar_rest_enabled|bool == True  %}
       --rest=true
       --rest.address="{{ lodestar_rest_interface }}"
       --rest.port={{ lodestar_rest_port }}
-      --rest.cors="{{lodestar_rest_cors}}"
-      --rest.namespace=[{{lodestar_rest_namespace|map('to_json')|join(',')}}]
+      --rest.cors="{{ lodestar_rest_cors }}"
+      --rest.namespace="{{ lodestar_rest_namespace }}"
 {% endif %}
 {% if lodestar_metrics_enabled|bool == True  %}
       --metrics=true
@@ -50,7 +50,7 @@ services:
 
 {% if lodestar_validator_enabled|bool == True  %}
   lodestar-validator:
-    name: lodestar-validator
+    container_name: lodestar-validator
     image: "{{ lodestart_image }}:{{ lodestar_version }}"
     user: "{{ lodestar_user_details.uid}}:{{ lodestar_group_details.gid }}"
     depends_on:
@@ -68,8 +68,7 @@ services:
       --beaconNodes="{{ lodestar_validator_beaconnodes }}"
       --keystoresDir="{{ lodestar_keystores_dir }}"
       --secretsDir="{{ lodestar_secrets_dir }}"
-lodestar_secrets_dir: "/config/secrets"
-{% if lodestar_default_fee_recipient == ""  %}
+{% if lodestar_default_fee_recipient != ""  %}
       --suggestedFeeRecipient={{ lodestar_default_fee_recipient }}
 {% endif %}
 {% if lodestar_keymanager_api_enabled|bool == True  %}
@@ -79,7 +78,7 @@ lodestar_secrets_dir: "/config/secrets"
       --keymanager.cors="{{ lodestar_keymanager_cors }}"
 {% endif %}
 {% if lodestar_enable_doppelganger_protection|bool == True %}
-      - --doppelgangerProtectionEnabled=true
+      --doppelgangerProtectionEnabled=true
 {% endif %}
 {% if lodestar_metrics_enabled|bool == True  %}
       --metrics=true

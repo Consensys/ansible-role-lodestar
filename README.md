@@ -40,12 +40,8 @@ All variables which can be overridden are stored in [defaults/main.yml](defaults
 | `lodestar_network`             | mainnet                            | Predefined network configuration                                                                                    |
 | `lodestar_host_ip`             | ""                                 |                                                                                                                     |
 
-### Standalone Mode
-
-It is possible to configure lodestar to run in either monolith mode (both beacon and validator run in same process) or standalone mode(beacon and validator run in its own process).
-Standalone mode runs beacon service its own process and validator service in its own process. Systemd service name `lodestar` is used for beacon service
-and `lodestar-validator` is used for validator service when run in standalone mode. Ansible role defaults to run lodestar in monolith mode and behaviour can be controlled with the
-variable `lodestar_standalone_validator=False/True`.
+### Keys/Secrets
+Please note that you must put your own secrets and keys in the config directory that you are using ie `lodestar_config_dir`
 
 ### Example Playbook
 

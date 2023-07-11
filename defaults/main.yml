@@ -10,13 +10,12 @@ lodestar_base_dir: "/opt/lodestar"
 lodestar_data_dir: "{{ lodestar_base_dir }}/data"
 lodestar_config_dir: "/etc/lodestar"
 lodestar_log_dir: "/var/log/lodestar"
-lodestar_node_private_key_file: ""
 # jwt path on host
 lodestar_jwt_auth_file: "/etc/jwt-secret.hex"
 
 
 # Logging
-lodestar_log_level: INFO
+lodestar_log_level: info
 
 # networking
 lodestar_host_ip: ""
@@ -26,9 +25,9 @@ lodestar_default_ip: "127.0.0.1"
 lodestar_network: mainnet
 lodestar_p2p_port: 9000
 lodestar_execution_urls: "http://127.0.0.1:8551"
-lodestar_validator_enabled: True
+lodestar_validator_enabled: False
 lodestar_validator_beaconnodes: "http://lodestar-beacon:9596"
-lodestar_checkpoint_sync_url: "https://{{lodestar_network}}.checkpoint-sync.ethdevops.io"
+lodestar_checkpoint_sync_url: "https://beaconstate-{{lodestar_network}}.chainsafe.io"
 lodestar_default_fee_recipient: ""
 
 #metrics
@@ -41,7 +40,7 @@ lodestar_rest_port: 5051
 lodestar_rest_enabled: "True"
 lodestar_rest_interface: "127.0.0.1"
 lodestar_rest_cors: "*"
-lodestar_rest_namespace: ["beacon","config","events","node","validator","lightclient"]
+lodestar_rest_namespace: "beacon,config,events,node,validator,lightclient"
 
 # keymanager
 lodestar_enable_doppelganger_protection: "True"
