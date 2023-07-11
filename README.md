@@ -37,8 +37,17 @@ All variables which can be overridden are stored in [defaults/main.yml](defaults
 | `lodestar_config_dir`          | /etc/lodestar                      | Path for default configuration                                                                                      |
 | `lodestar_data_dir`            | /opt/lodestar/data                 | Path for data directory                                                                                             |
 | `lodestar_log_dir`             | /var/log/lodestar                  | Path for logs directory                                                                                             |
+| `lodestar_log_level`           | "info"                             | Log level                                                                                                           |
 | `lodestar_network`             | mainnet                            | Predefined network configuration                                                                                    |
-| `lodestar_host_ip`             | ""                                 |                                                                                                                     |
+| `lodestar_jwt_auth_file`       | "/etc/jwt-secret.hex"              | Path of the JWT file                                                                                                |
+| `lodestar_validator_enabled`   | "False"                 | Whether to run in validator mode - please note that the secrets and keys need to be copied by you                   |
+| `lodestar_execution_urls`      | "http://127.0.0.1:8551" | The elc execution url                                                                                               |
+| `lodestar_validator_beaconnodes` | "http://lodestar-beacon:9596" | The beacon endpoint for the validator to use                                                                |
+| `lodestar_checkpoint_sync_url`   | "https://beaconstate-{{lodestar_network}}.chainsafe.io" | Checkpoint sync to speed things up                                                |
+| `lodestar_default_fee_recipient` | ""                     | The default fee recepient address                                                                                    |
+| `lodestar_keystores_dir`  | "/config/keys"                         |  The keys directory for validators                                                                                   |
+| `lodestar_secrets_dir`    | "/config/secrets"                      |  The secrets directory for validators                                                                                |
+| `lodestar_enable_doppelganger_protection` | True                    | Doppleganger protection enabled by default                                                                          |
 
 ### Keys/Secrets
 Please note that you must put your own secrets and keys in the config directory that you are using ie `lodestar_config_dir`

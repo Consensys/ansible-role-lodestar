@@ -13,7 +13,6 @@ lodestar_log_dir: "/var/log/lodestar"
 # jwt path on host
 lodestar_jwt_auth_file: "/etc/jwt-secret.hex"
 
-
 # Logging
 lodestar_log_level: info
 
