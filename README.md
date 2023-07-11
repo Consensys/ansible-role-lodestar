@@ -37,7 +37,6 @@ All variables which can be overridden are stored in [defaults/main.yml](defaults
 | `lodestar_config_dir`          | /etc/lodestar                      | Path for default configuration                                                                                      |
 | `lodestar_data_dir`            | /opt/lodestar/data                 | Path for data directory                                                                                             |
 | `lodestar_log_dir`             | /var/log/lodestar                  | Path for logs directory                                                                                             |
-| `lodestar_log_file`            | lodestar.log                       | Path containing the location (relative or absolute) and the log filename                                            | 
 | `lodestar_network`             | mainnet                            | Predefined network configuration                                                                                    |
 | `lodestar_host_ip`             | ""                                 |                                                                                                                     |
 

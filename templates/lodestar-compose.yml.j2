@@ -1,7 +1,8 @@
 version: '3.6'
 
 services:
-  - name: lodestar-beacon
+  lodestar-beacon:
+    name: lodestar-beacon
     image: "{{ lodestart_image }}:{{ lodestar_version }}"
     user: "{{ lodestar_user_details.uid}}:{{ lodestar_group_details.gid }}"
     ports:
@@ -13,6 +14,9 @@ services:
 {% if lodestar_rest_enabled|bool == True  %}
       - 127.0.0.1:{{lodestar_rest_port}}:{{lodestar_rest_port}}
 {% endif %}
+{% if lodestar_validator_enabled|bool == True  %}
+      - 127.0.0.1:9596:9596
+{% endif %}      
     volumes:
       - {{ lodestar_data_dir }}:/data
       - {{ lodestar_config_dir }}:/config
@@ -42,5 +46,46 @@ services:
       --metrics.port={{ lodestar_metrics_port }}
 {% endif %}
       --logLevel={{ lodestar_log_level }}
-      --logFile=/log/{{lodestar_log_file}}
+      --logFile=/log/lodestar-beacon.log
 
+{% if lodestar_validator_enabled|bool == True  %}
+  lodestar-validator:
+    name: lodestar-validator
+    image: "{{ lodestart_image }}:{{ lodestar_version }}"
+    user: "{{ lodestar_user_details.uid}}:{{ lodestar_group_details.gid }}"
+    depends_on:
+      - lodestar-beacon
+    volumes:
+      - {{ lodestar_data_dir }}:/data
+      - {{ lodestar_config_dir }}:/config
+      - {{ lodestar_jwt_auth_file}}:/jwt/jwt-secret.hex:ro
+      - {{ lodestar_log_dir }}:/log
+    command: >-
+      validator
+      --dataDir=/data
+      --network={{ lodestar_network }}
+      --jwt-secret=/jwt/jwt-secret.hex
+      --beaconNodes="{{ lodestar_validator_beaconnodes }}"
+      --keystoresDir="{{ lodestar_keystores_dir }}"
+      --secretsDir="{{ lodestar_secrets_dir }}"
+lodestar_secrets_dir: "/config/secrets"
+{% if lodestar_default_fee_recipient == ""  %}
+      --suggestedFeeRecipient={{ lodestar_default_fee_recipient }}
+{% endif %}
+{% if lodestar_keymanager_api_enabled|bool == True  %}
+      --keymanager=true
+      --keymanager.address="{{ lodestar_keymanager_interface }}"
+      --keymanager.port={{ lodestar_keymanager_port }}
+      --keymanager.cors="{{ lodestar_keymanager_cors }}"
+{% endif %}
+{% if lodestar_enable_doppelganger_protection|bool == True %}
+      - --doppelgangerProtectionEnabled=true
+{% endif %}
+{% if lodestar_metrics_enabled|bool == True  %}
+      --metrics=true
+      --metrics.address="{{ lodestar_metrics_interface }}"
+      --metrics.port={{ lodestar_metrics_port }}
+{% endif %}
+      --logLevel={{ lodestar_log_level }}
+      --logFile=/log/lodestar-validator.log
+{% endif %}

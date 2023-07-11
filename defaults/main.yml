@@ -17,7 +17,6 @@ lodestar_jwt_auth_file: "/etc/jwt-secret.hex"
 
 # Logging
 lodestar_log_level: INFO
-lodestar_log_file: "lodestar.log"
 
 # networking
 lodestar_host_ip: ""
@@ -27,8 +26,8 @@ lodestar_default_ip: "127.0.0.1"
 lodestar_network: mainnet
 lodestar_p2p_port: 9000
 lodestar_execution_urls: "http://127.0.0.1:8551"
-lodestar_beacon_enabled: True
-lodestar_standalone_validator: "{{ not lodestar_beacon_enabled | bool }}"
+lodestar_validator_enabled: True
+lodestar_validator_beaconnodes: "http://lodestar-beacon:9596"
 lodestar_checkpoint_sync_url: "https://{{lodestar_network}}.checkpoint-sync.ethdevops.io"
 lodestar_default_fee_recipient: ""
 
@@ -44,16 +43,11 @@ lodestar_rest_interface: "127.0.0.1"
 lodestar_rest_cors: "*"
 lodestar_rest_namespace: ["beacon","config","events","node","validator","lightclient"]
 
-lodestar_cmdline_args: ""
-# Using an internal variable for setting the configuration. This avoids circular reference.
-lodestar_cmdline_args_beacon: "{{ lodestar_cmdline_args }}"
-lodestar_cmdline_args_validator: "{{ lodestar_cmdline_args }}"
-lodestar_env_opts: ""
-
-# Using an internal variable for setting the configuration. This avoids circular reference.
-lodestar_env_opts_beacon: "{{ lodestar_env_opts }}"
-lodestar_env_opts_validator: "{{ lodestar_env_opts }}"
-lodestar_validator_key_files: []
-lodestar_validator_key_password_files: []
-# determine whether to run as standalone validator client. Default is not to run standalone validator
-
+# keymanager
+lodestar_enable_doppelganger_protection: "True"
+lodestar_keymanager_api_enabled: "True"
+lodestar_keymanager_interface: "127.0.0.1"
+lodestar_keymanager_port: 5062
+lodestar_keymanager_cors: "*"
+lodestar_keystores_dir: "/config/keys"
+lodestar_secrets_dir: "/config/secrets"

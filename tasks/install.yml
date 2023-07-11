@@ -33,15 +33,6 @@
     dest: "/etc/logrotate.d/lodestar"
   become: true
 
-# - name: Copy JWT shared secret file
-#   ansible.builtin.copy:
-#     src: "{{ lodestar_host_jwt_auth_file }}"
-#     dest: "{{ lodestar_config_dir }}/jwt-secret.hex"
-#     owner: "{{ lodestar_user }}"
-#     group: "{{ lodestar_group }}"
-#     mode: 0400
-#   become: yes
-
 - name: Stop lodestart
   community.docker.docker_compose:
     project_src: "{{ lodestar_base_dir }}"
