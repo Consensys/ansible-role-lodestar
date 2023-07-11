@@ -1,0 +1,72 @@
+---
+- name: Ensure lodestar group exists
+  group:
+    name: "{{ lodestar_group }}"
+    state: present
+  become: true
+
+- name: Create lodestar user
+  user:
+    comment:  lodestar client user
+    name: "{{ lodestar_user }}"
+    group: "{{ lodestar_group }}"
+  become: true
+
+- name: Create directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ lodestar_user }}"
+    group: "{{ lodestar_group }}"
+  loop:
+    - "{{ lodestar_base_dir }}"
+    - "{{ lodestar_config_dir }}"    
+    - "{{ lodestar_data_dir }}"
+    - "{{ lodestar_data_beacon_dir }}"
+    - "{{ lodestar_log_dir }}"
+  become: true
+
+- name: Setup logrotate
+  template:
+    src: "logrotate/lodestar"
+    dest: "/etc/logrotate.d/lodestar"
+  become: true
+
+# - name: Copy JWT shared secret file
+#   ansible.builtin.copy:
+#     src: "{{ lodestar_host_jwt_auth_file }}"
+#     dest: "{{ lodestar_config_dir }}/jwt-secret.hex"
+#     owner: "{{ lodestar_user }}"
+#     group: "{{ lodestar_group }}"
+#     mode: 0400
+#   become: yes
+
+- name: Stop lodestart
+  community.docker.docker_compose:
+    project_src: "{{ lodestar_base_dir }}"
+    state: absent
+  ignore_errors: yes    
+
+- name: Create docker-compose.yml file
+  template:
+    src: lodestar-compose.yml.j2
+    dest: "{{ lodestar_base_dir }}/docker-compose.yml"
+    owner: "{{ lodestar_user }}"
+    group: "{{ lodestar_group }}"
+    mode: 0644
+  become: yes
+
+- name: Give access to docker.sock
+  acl:
+    path: /var/run/docker.sock
+    entity: 1000
+    etype: user
+    permissions: rw
+    state: present
+  become: yes
+
+- name: Restart lodestar
+  community.docker.docker_compose:
+    project_src: "{{ lodestar_base_dir }}"
+    restarted: true
+    state: present

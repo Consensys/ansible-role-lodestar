@@ -1,0 +1,13 @@
+---
+- name: Ensure we have sane configuration
+  block:
+    - fail:
+        msg: You must set "lodestar_version" for this role to run
+      when: lodestar_version is not defined
+
+- name: Get IP address to bind to if not provided
+  include_tasks: "network.yml"
+  when: not lodestar_host_ip
+
+- name: Install lodestar
+  include_tasks: "install.yml"

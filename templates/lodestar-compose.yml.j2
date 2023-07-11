@@ -1,0 +1,51 @@
+version: '3.6'
+
+services:
+  - name: lodestar-beacon
+    image: "{{ lodestart_image }}:{{ lodestar_version }}"
+
+    user: "{{ consensus_client_user.uid}}:{{ consensus_client_group.gid }}"
+    group_add:
+      - "{{ jwt_secret_access_group.gid }}"    
+    security_opt:
+      - no-new-privileges
+    ports:
+      - {{ lodestar_p2p_port }}:{{ lodestar_p2p_port }}/tcp 
+      - {{ lodestar_p2p_port }}:{{ lodestar_p2p_port }}/udp
+{% if consensus_client_metrics_enabled|bool == True  %}
+      - 127.0.0.1:{{lodestar_metrics_port}}:{{lodestar_metrics_port}}
+{% endif %}
+{% if lodestar_rest_enabled|bool == True  %}
+      - 127.0.0.1:{{lodestar_rest_port}}:{{lodestar_rest_port}}
+{% endif %}
+    volumes:
+      - {{ lodestar_data_dir }}:/data
+      - {{ lodestar_config_dir }}:/config
+      - {{ lodestar_jwt_auth_file}}:/jwt/jwt-secret.hex:ro
+      - {{ lodestar_log_dir }}:/log
+    command: >-
+      beacon
+      --dataDir=/data
+      --network={{ lodestar_network }}
+      --jwt-secret=/jwt/jwt-secret.hex
+      --port={{ lodestar_p2p_port }}
+      --execution.urls={{ lodestar_execution_urls }}
+      --checkpointSyncUrl={{ lodestar_checkpoint_sync_url }}
+{% if lodestar_default_fee_recipient == ""  %}
+      --suggestedFeeRecipient={{ lodestar_default_fee_recipient }}
+{% endif %}
+{% if lodestar_rest_enabled|bool == True  %}
+      --rest=true
+      --rest.address="{{ lodestar_rest_interface }}"
+      --rest.port={{ lodestar_rest_port }}
+      --rest.cors="{{lodestar_rest_cors}}"
+      --rest.namespace=[{{lodestar_rest_namespace|map('to_json')|join(',')}}]
+{% endif %}
+{% if lodestar_metrics_enabled|bool == True  %}
+      --metrics=true
+      --metrics.address="{{ lodestar_metrics_interface }}"
+      --metrics.port={{ lodestar_metrics_port }}
+{% endif %}
+      --logLevel={{ lodestar_log_level }}
+      --logFile=/log/{{lodestar_log_file}}
+

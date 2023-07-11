@@ -1,0 +1,59 @@
+---
+# User and group
+lodestar_user: lodestar
+lodestar_group: "{{ lodestar_user }}"
+
+# Directory paths
+lodestart_image: "chainsafe/lodestar"
+lodestar_version: "latest"
+lodestar_base_dir: "/opt/lodestar"
+lodestar_data_dir: "{{ lodestar_base_dir }}/data"
+lodestar_config_dir: "/etc/lodestar"
+lodestar_log_dir: "/var/log/lodestar"
+lodestar_node_private_key_file: ""
+# jwt path on host
+lodestar_jwt_auth_file: "/etc/jwt-secret.hex"
+
+
+# Logging
+lodestar_log_level: INFO
+lodestar_log_file: "lodestar.log"
+
+# networking
+lodestar_host_ip: ""
+lodestar_default_ip: "127.0.0.1"
+
+# lodestar config
+lodestar_network: mainnet
+lodestar_p2p_port: 9000
+lodestar_execution_urls: "http://127.0.0.1:8551"
+lodestar_beacon_enabled: True
+lodestar_standalone_validator: "{{ not lodestar_beacon_enabled | bool }}"
+lodestar_checkpoint_sync_url: "https://{{lodestar_network}}.checkpoint-sync.ethdevops.io"
+lodestar_default_fee_recipient: ""
+
+#metrics
+lodestar_metrics_enabled: "True"
+lodestar_metrics_interface: 0.0.0.0
+lodestar_metrics_port: 8008
+
+# rest
+lodestar_rest_port: 5051
+lodestar_rest_enabled: "True"
+lodestar_rest_interface: "127.0.0.1"
+lodestar_rest_cors: "*"
+lodestar_rest_namespace: ["beacon","config","events","node","validator","lightclient"]
+
+lodestar_cmdline_args: ""
+# Using an internal variable for setting the configuration. This avoids circular reference.
+lodestar_cmdline_args_beacon: "{{ lodestar_cmdline_args }}"
+lodestar_cmdline_args_validator: "{{ lodestar_cmdline_args }}"
+lodestar_env_opts: ""
+
+# Using an internal variable for setting the configuration. This avoids circular reference.
+lodestar_env_opts_beacon: "{{ lodestar_env_opts }}"
+lodestar_env_opts_validator: "{{ lodestar_env_opts }}"
+lodestar_validator_key_files: []
+lodestar_validator_key_password_files: []
+# determine whether to run as standalone validator client. Default is not to run standalone validator
+
