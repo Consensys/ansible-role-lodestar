@@ -77,5 +77,6 @@ services:
       --metrics.port={{ lodestar_metrics_port }}
 {% endif %}
       --logLevel={{ lodestar_log_level }}
+      --logFileLevel={{ lodestar_log_level }}
       --logFile=/log/lodestar-validator.log
 {% endif %}
