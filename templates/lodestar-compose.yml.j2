@@ -4,20 +4,9 @@ services:
   lodestar-beacon:
     container_name: lodestar-beacon
     image: "{{ lodestar_image }}:{{ lodestar_version }}"
+    network_mode: "host"
     restart: always
     user: "{{ lodestar_user_details.uid}}:{{ lodestar_group_details.gid }}"
-    ports:
-      - {{ lodestar_p2p_port }}:{{ lodestar_p2p_port }}/tcp 
-      - {{ lodestar_p2p_port }}:{{ lodestar_p2p_port }}/udp
-{% if lodestar_metrics_enabled|bool == True  %}
-      - 127.0.0.1:{{lodestar_metrics_port}}:{{lodestar_metrics_port}}
-{% endif %}
-{% if lodestar_rest_enabled|bool == True  %}
-      - 127.0.0.1:{{lodestar_rest_port}}:{{lodestar_rest_port}}
-{% endif %}
-{% if lodestar_validator_enabled|bool == True  %}
-      - 127.0.0.1:9596:9596
-{% endif %}      
     volumes:
       - {{ lodestar_data_dir }}:/data
       - {{ lodestar_config_dir }}:/config
