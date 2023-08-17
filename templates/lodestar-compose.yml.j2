@@ -4,12 +4,11 @@ services:
   lodestar-beacon:
     container_name: lodestar-beacon
     image: "{{ lodestar_image }}:{{ lodestar_version }}"
-    network_mode: "host"
     restart: always
     user: "{{ lodestar_user_details.uid}}:{{ lodestar_group_details.gid }}"
     ports:
       - {{ lodestar_p2p_port }}:{{ lodestar_p2p_port }}
-      - 9596:9596
+      - {{ lodestar_rest_port }}:{{ lodestar_rest_port }}
     volumes:
       - {{ lodestar_data_dir }}:/data
       - {{ lodestar_config_dir }}:/config
@@ -58,7 +57,7 @@ services:
       validator
       --dataDir=/data
       --network={{ lodestar_network }}
-      --server='{{ lodestar_validator_beaconnodes }}'"
+      --server={{ lodestar_validator_beaconnodes }}
       --keystoresDir="{{ lodestar_keystores_dir }}"
       --secretsDir="{{ lodestar_secrets_dir }}"
 {% if lodestar_default_fee_recipient != ""  %}
