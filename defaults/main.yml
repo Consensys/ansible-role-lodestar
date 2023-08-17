@@ -36,13 +36,13 @@ lodestar_metrics_port: 8008
 # rest
 lodestar_rest_port: 5051
 lodestar_rest_enabled: "True"
-lodestar_rest_interface: "127.0.0.1"
+lodestar_rest_interface: "0.0.0.0"
 lodestar_rest_cors: "*"
 lodestar_rest_namespace: "beacon,config,events,node,validator,lightclient"
 
 # keymanager
 lodestar_enable_doppelganger_protection: "True"
-lodestar_keymanager_api_enabled: "True"
+lodestar_keymanager_api_enabled: "False"
 lodestar_keymanager_interface: "127.0.0.1"
 lodestar_keymanager_port: 5062
 lodestar_keymanager_cors: "*"

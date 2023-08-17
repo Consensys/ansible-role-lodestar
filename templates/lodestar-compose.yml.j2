@@ -7,6 +7,9 @@ services:
     network_mode: "host"
     restart: always
     user: "{{ lodestar_user_details.uid}}:{{ lodestar_group_details.gid }}"
+    ports:
+      - {{ lodestar_p2p_port }}:{{ lodestar_p2p_port }}
+      - 9596:9596
     volumes:
       - {{ lodestar_data_dir }}:/data
       - {{ lodestar_config_dir }}:/config
@@ -55,8 +58,7 @@ services:
       validator
       --dataDir=/data
       --network={{ lodestar_network }}
-      --jwt-secret=/jwt/jwt-secret.hex
-      --beaconNodes="{{ lodestar_validator_beaconnodes }}"
+      --server='{{ lodestar_validator_beaconnodes }}'"
       --keystoresDir="{{ lodestar_keystores_dir }}"
       --secretsDir="{{ lodestar_secrets_dir }}"
 {% if lodestar_default_fee_recipient != ""  %}
@@ -70,11 +72,6 @@ services:
 {% endif %}
 {% if lodestar_enable_doppelganger_protection|bool == True %}
       --doppelgangerProtectionEnabled=true
-{% endif %}
-{% if lodestar_metrics_enabled|bool == True  %}
-      --metrics=true
-      --metrics.address="{{ lodestar_metrics_interface }}"
-      --metrics.port={{ lodestar_metrics_port }}
 {% endif %}
       --logLevel={{ lodestar_log_level }}
       --logFileLevel={{ lodestar_log_level }}
