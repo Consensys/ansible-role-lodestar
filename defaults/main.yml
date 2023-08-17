@@ -39,6 +39,7 @@ lodestar_rest_enabled: "True"
 lodestar_rest_interface: "0.0.0.0"
 lodestar_rest_cors: "*"
 lodestar_rest_namespace: "beacon,config,events,node,validator,lightclient"
+lodestar_graffiti: ""
 
 # keymanager
 lodestar_enable_doppelganger_protection: "True"
