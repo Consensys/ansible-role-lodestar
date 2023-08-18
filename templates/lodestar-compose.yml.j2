@@ -42,6 +42,7 @@ services:
 {% endif %}
       --logLevel={{ lodestar_log_level }}
       --logFile=/log/lodestar-beacon.log
+      --logFileLevel={{ lodestar_log_level }}
 
 {% if lodestar_validator_enabled|bool == True  %}
   lodestar-validator:
