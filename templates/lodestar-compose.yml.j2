@@ -28,9 +28,6 @@ services:
 {% if lodestar_default_fee_recipient != ""  %}
       --suggestedFeeRecipient={{ lodestar_default_fee_recipient }}
 {% endif %}
-{% if lodestar_graffiti != ""  %}
-      --graffiti="{{ lodestar_graffiti }}"
-{% endif %}
 {% if lodestar_rest_enabled|bool == True  %}
       --rest=true
       --rest.address="{{ lodestar_rest_interface }}"
