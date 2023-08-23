@@ -49,3 +49,7 @@ lodestar_keymanager_port: 5062
 lodestar_keymanager_cors: "*"
 lodestar_keystores_dir: "/config/keys"
 lodestar_secrets_dir: "/config/secrets"
+
+# Misc
+
+lodestar_beacon_network_mode: host

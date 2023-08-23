@@ -5,7 +5,12 @@ services:
     container_name: lodestar-beacon
     image: "{{ lodestar_image }}:{{ lodestar_version }}"
     restart: always
-    network_mode: "host"
+    network_mode: "{{ lodestar_beacon_network_mode }}"
+{% if lodestar_beacon_network_mode != "host" %}
+    ports:
+      - {{ lodestar_p2p_port }}:{{ lodestar_p2p_port }}
+      - {{ lodestar_rest_port }}:{{ lodestar_rest_port }}
+{% endif %}
     user: "{{ lodestar_user_details.uid}}:{{ lodestar_group_details.gid }}"
     volumes:
       - {{ lodestar_data_dir }}:/data
