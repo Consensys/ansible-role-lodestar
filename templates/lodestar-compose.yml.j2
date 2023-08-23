@@ -5,8 +5,9 @@ services:
     container_name: lodestar-beacon
     image: "{{ lodestar_image }}:{{ lodestar_version }}"
     restart: always
+{% if lodestar_beacon_network_mode == "host" %}
     network_mode: "{{ lodestar_beacon_network_mode }}"
-{% if lodestar_beacon_network_mode != "host" %}
+{% else %}
     ports:
       - {{ lodestar_p2p_port }}:{{ lodestar_p2p_port }}
       - {{ lodestar_rest_port }}:{{ lodestar_rest_port }}
@@ -49,7 +50,6 @@ services:
     container_name: lodestar-validator
     image: "{{ lodestar_image }}:{{ lodestar_version }}"
     restart: always
-    network_mode: "{{ lodestar_validator_network_mode }}"
     user: "{{ lodestar_user_details.uid}}:{{ lodestar_group_details.gid }}"
     depends_on:
       - lodestar-beacon
