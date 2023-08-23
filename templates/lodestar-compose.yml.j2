@@ -5,10 +5,8 @@ services:
     container_name: lodestar-beacon
     image: "{{ lodestar_image }}:{{ lodestar_version }}"
     restart: always
+    network_mode: "host"
     user: "{{ lodestar_user_details.uid}}:{{ lodestar_group_details.gid }}"
-    ports:
-      - {{ lodestar_p2p_port }}:{{ lodestar_p2p_port }}
-      - {{ lodestar_rest_port }}:{{ lodestar_rest_port }}
     volumes:
       - {{ lodestar_data_dir }}:/data
       - {{ lodestar_config_dir }}:/config
