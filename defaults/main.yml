@@ -53,3 +53,4 @@ lodestar_secrets_dir: "/config/secrets"
 # Misc
 
 lodestar_beacon_network_mode: host
+lodestar_validator_network_mode: bridge
