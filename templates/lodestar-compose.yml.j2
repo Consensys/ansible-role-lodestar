@@ -12,6 +12,12 @@ services:
       - {{ lodestar_p2p_port }}:{{ lodestar_p2p_port }}
       - {{ lodestar_rest_port }}:{{ lodestar_rest_port }}
 {% endif %}
+{% if lodestar_beacon_environment_vars | length > 0 %}
+    environment:
+{% for item in lodestar_beacon_environment_vars %}
+      - {{ item }}
+{% endfor %}
+{% endif %}
     user: "{{ lodestar_user_details.uid}}:{{ lodestar_group_details.gid }}"
     volumes:
       - {{ lodestar_data_dir }}:/data
