@@ -54,4 +54,4 @@ lodestar_secrets_dir: "/config/secrets"
 
 lodestar_beacon_network_mode: host
 lodestar_validator_network_mode: host
-lodestar_beacon_environment_vars: [""]
+lodestar_beacon_environment_vars: []
