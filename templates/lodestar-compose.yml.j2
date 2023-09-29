@@ -59,7 +59,7 @@ services:
     restart: always
 {% if lodestar_validator_network_mode == "host" %}
     network_mode: "{{ lodestar_validator_network_mode }}"
-{% else %}
+{% endif %}
     user: "{{ lodestar_user_details.uid}}:{{ lodestar_group_details.gid }}"
     depends_on:
       - lodestar-beacon
