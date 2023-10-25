@@ -68,7 +68,7 @@ services:
       - {{ lodestar_config_dir }}:/config
       - {{ lodestar_jwt_auth_file}}:/jwt/jwt-secret.hex:ro
       - {{ lodestar_log_dir }}:/log
-    entrypoint: ["bash", "-c", "for d in {{ lodestar_keystores_dir }}/*/ ; do (cd "$d" && rm voting-keystore.json.lock); done && node ./packages/cli/bin/lodestar"]
+    entrypoint: ["bash", "-c", "for d in {{ lodestar_keystores_dir }}/*/ ; do (cd $d && rm voting-keystore.json.lock); done && node ./packages/cli/bin/lodestar"]
     command: >-
       validator
       --dataDir=/data
