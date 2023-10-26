@@ -68,7 +68,7 @@ services:
       - {{ lodestar_config_dir }}:/config
       - {{ lodestar_jwt_auth_file}}:/jwt/jwt-secret.hex:ro
       - {{ lodestar_log_dir }}:/log
-    entrypoint: /bin/sh -c "find /config -name 'voting-keystore.json.lock' -maxdepth 3 -type f -delete && node ./packages/cli/bin/lodestar $$0 $$@"
+    entrypoint: ["bash", "-c", "for d in {{ lodestar_keystores_dir }}/*/ ; do (cd $$d && rm voting-keystore.json.lock); done && node ./packages/cli/bin/lodestar"]
     command: >-
       validator
       --dataDir=/data
@@ -80,7 +80,7 @@ services:
       --suggestedFeeRecipient={{ lodestar_default_fee_recipient }}
 {% endif %}
 {% if lodestar_graffiti != ""  %}
-      --graffiti="{{ lodestar_graffiti | replace(' ', '-') }}"
+      --graffiti="{{ lodestar_graffiti }}"
 {% endif %}
 {% if lodestar_keymanager_api_enabled|bool == True  %}
       --keymanager=true
