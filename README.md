@@ -48,6 +48,7 @@ All variables which can be overridden are stored in [defaults/main.yml](defaults
 | `lodestar_keystores_dir`  | "/config/keys"                         |  The keys directory for validators                                                                                   |
 | `lodestar_secrets_dir`    | "/config/secrets"                      |  The secrets directory for validators                                                                                |
 | `lodestar_enable_doppelganger_protection` | True                    | Doppleganger protection enabled by default                                                                          |
+| `lodestar_validator_force` | False                    | Open validators even if there's a lockfile. Use with caution                                                                          |
 
 ### Keys/Secrets
 Please note that you must put your own secrets and keys in the config directory that you are using ie `lodestar_config_dir`

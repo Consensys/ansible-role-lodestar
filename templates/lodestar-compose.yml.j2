@@ -90,6 +90,9 @@ services:
 {% if lodestar_enable_doppelganger_protection|bool == True %}
       --doppelgangerProtectionEnabled=true
 {% endif %}
+{% if lodestar_validator_force|bool == True %}
+      --force=true
+{% endif %}
       --logLevel={{ lodestar_log_level }}
       --logFileLevel={{ lodestar_log_level }}
       --logFile=/log/lodestar-validator.log
