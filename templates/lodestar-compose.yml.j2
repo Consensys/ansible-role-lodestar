@@ -56,7 +56,8 @@ services:
   lodestar-validator:
     container_name: lodestar-validator
     image: "{{ lodestar_image }}:{{ lodestar_version }}"
-    restart: always
+    stop_grace_period: 1m30s
+    restart: unless-stopped
 {% if lodestar_validator_network_mode == "host" %}
     network_mode: "{{ lodestar_validator_network_mode }}"
 {% endif %}
