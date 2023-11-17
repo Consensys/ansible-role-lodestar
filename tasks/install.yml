@@ -8,7 +8,7 @@
 
 - name: Create lodestar user
   user:
-    comment:  lodestar client user
+    comment: lodestar client user
     name: "{{ lodestar_user }}"
     group: "{{ lodestar_group }}"
   become: true
@@ -22,7 +22,7 @@
     group: "{{ lodestar_group }}"
   loop:
     - "{{ lodestar_base_dir }}"
-    - "{{ lodestar_config_dir }}"    
+    - "{{ lodestar_config_dir }}"
     - "{{ lodestar_data_dir }}"
     - "{{ lodestar_log_dir }}"
   become: true
@@ -36,8 +36,9 @@
 - name: Stop lodestar
   community.docker.docker_compose:
     project_src: "{{ lodestar_base_dir }}"
+    build: false
+    stopped: true
     state: absent
-  ignore_errors: yes    
 
 - name: Create docker-compose.yml file
   template:
@@ -57,8 +58,9 @@
     state: present
   become: yes
 
-- name: Restart lodestar
+- name: Restart services
   community.docker.docker_compose:
     project_src: "{{ lodestar_base_dir }}"
+    build: false
     restarted: true
     state: present
