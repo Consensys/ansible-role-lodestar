@@ -58,7 +58,7 @@
     state: present
   become: yes
 
-- name: Restart services
+- name: Start services
   community.docker.docker_compose:
     project_src: "{{ lodestar_base_dir }}"
     build: false
