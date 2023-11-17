@@ -62,5 +62,4 @@
   community.docker.docker_compose:
     project_src: "{{ lodestar_base_dir }}"
     build: false
-    restarted: true
     state: present
