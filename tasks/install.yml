@@ -38,9 +38,7 @@
   ansible.builtin.command:
     chdir: "{{ lodestar_base_dir }}"
     cmd: "docker compose down"
-  # Using this to prevent running when compose file does not exist eventhough it is
-  # logically not the corret function
-  removes: "{{ lodestar_base_dir }}/docker-compose.yml"
+    removes: "{{ lodestar_base_dir }}/docker-compose.yml"
   become: true
   become_method: sudo
 
