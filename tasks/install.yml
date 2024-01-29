@@ -33,12 +33,16 @@
     dest: "/etc/logrotate.d/lodestar"
   become: true
 
+# Running as root. App user might not have permission at this point
 - name: Stop lodestar
-  community.docker.docker_compose:
-    project_src: "{{ lodestar_base_dir }}"
-    build: false
-    stopped: true
-    state: absent
+  ansible.builtin.command:
+    chdir: "{{ lodestar_base_dir }}"
+    cmd: "docker compose down"
+    # Docker compose does not removes this file. This is used to prevent running command
+    # if docker-compose.yml does not present
+    removes: "{{ lodestar_base_dir }}/docker-compose.yml"
+  become: true
+  become_method: sudo
 
 - name: Create docker-compose.yml file
   template:
@@ -58,8 +62,9 @@
     state: present
   become: yes
 
-- name: Start services
-  community.docker.docker_compose:
-    project_src: "{{ lodestar_base_dir }}"
-    build: false
-    state: present
+- name: Restart lodestar
+  ansible.builtin.command:
+    chdir: "{{ lodestar_base_dir }}"
+    cmd: "docker compose up -d"
+  become: true
+  become_method: sudo
