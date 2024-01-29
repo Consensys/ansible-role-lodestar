@@ -33,11 +33,12 @@
     dest: "/etc/logrotate.d/lodestar"
   become: true
 
-# Running as root. App user might not have permission at this point
 - name: Stop lodestar
-  ansible.builtin.command:
-    chdir: "{{ lodestar_base_dir }}"
-    cmd: "docker compose down"
+  community.docker.docker_compose:
+    project_src: "{{ lodestar_base_dir }}"
+    build: false
+    stopped: true
+    state: absent
   become: true
   become_method: sudo  
 
