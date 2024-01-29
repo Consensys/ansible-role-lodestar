@@ -58,7 +58,9 @@
   become: yes
 
 - name: Restart lodestar
-  community.docker.docker_compose:
-    project_src: "{{ lodestar_base_dir }}"
-    restarted: true
-    state: present
+  ansible.builtin.command:
+    chdir: "{{ lodestar_base_dir }}"
+    cmd: "docker compose up -d"
+  become: true
+  become_user: "{{ lodestar_user }}"
+  become_method: sudo
