@@ -17,7 +17,6 @@ lodestar_log_level: info
 
 # networking
 lodestar_host_ip: ""
-lodestar_default_ip: "127.0.0.1"
 
 # lodestar config
 lodestar_network: mainnet
