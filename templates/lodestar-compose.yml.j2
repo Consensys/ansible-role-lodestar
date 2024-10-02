@@ -5,6 +5,7 @@ services:
     container_name: lodestar-beacon
     image: "{{ lodestar_image }}:{{ lodestar_version }}"
     restart: always
+    pull_policy: always
 {% if lodestar_beacon_network_mode == "host" %}
     network_mode: "{{ lodestar_beacon_network_mode }}"
 {% else %}
