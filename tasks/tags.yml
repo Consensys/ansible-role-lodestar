@@ -1,0 +1,8 @@
+- name: Set the version on a local file so it can be used by other automation
+  copy: 
+    content: "{{ lodestar_version }}"
+    dest: "{{ lodestar_version_info_file }}"
+    owner: "{{ lodestar_user }}"
+    group: "{{ lodestar_group }}"
+    mode: 0644    
+  become: true    
