@@ -11,6 +11,7 @@ lodestar_config_dir: "/etc/lodestar"
 lodestar_log_dir: "/var/log/lodestar"
 # jwt path on host
 lodestar_jwt_auth_file: "/etc/jwt-secret.hex"
+lodestar_version_info_file: "{{ lodestar_config_dir }}/clc_version"
 
 # Logging
 lodestar_log_level: info
