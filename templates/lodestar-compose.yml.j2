@@ -1,6 +1,9 @@
 version: '3.6'
 
 services:
+
+{% if lodestar_beacon_enabled|bool == True  %}
+
   lodestar-beacon:
     container_name: lodestar-beacon
     image: "{{ lodestar_image }}:{{ lodestar_version }}"
@@ -53,7 +56,11 @@ services:
       --logFileLevel={{ lodestar_log_level }}
       --logFormat json
 
+{% endif %}
+
+
 {% if lodestar_validator_enabled|bool == True  %}
+
   lodestar-validator:
     container_name: lodestar-validator
     image: "{{ lodestar_image }}:{{ lodestar_version }}"
@@ -99,4 +106,5 @@ services:
       --logFileLevel={{ lodestar_log_level }}
       --logFile=/log/lodestar-validator.log
       --logFormat json
+
 {% endif %}

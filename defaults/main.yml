@@ -23,6 +23,7 @@ lodestar_host_ip: ""
 lodestar_network: mainnet
 lodestar_p2p_port: 9000
 lodestar_execution_urls: "http://127.0.0.1:8551"
+lodestar_beacon_enabled: True
 lodestar_validator_enabled: False
 lodestar_validator_beaconnodes: "http://lodestar-beacon:9596"
 lodestar_validator_force: False
@@ -52,7 +53,6 @@ lodestar_keystores_dir: "/config/keys"
 lodestar_secrets_dir: "/config/secrets"
 
 # Misc
-
 lodestar_beacon_network_mode: host
 lodestar_validator_network_mode: host
 lodestar_beacon_environment_vars: []
