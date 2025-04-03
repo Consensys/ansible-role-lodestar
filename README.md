@@ -40,6 +40,7 @@ All variables which can be overridden are stored in [defaults/main.yml](defaults
 | `lodestar_log_level`           | "info"                             | Log level                                                                                                           |
 | `lodestar_network`             | mainnet                            | Predefined network configuration                                                                                    |
 | `lodestar_jwt_auth_file`       | "/etc/jwt-secret.hex"              | Path of the JWT file                                                                                                |
+| `lodestar_beacon_enabled`   | "True"                 | Whether to run in beacon mode                   |
 | `lodestar_validator_enabled`   | "False"                 | Whether to run in validator mode - please note that the secrets and keys need to be copied by you                   |
 | `lodestar_execution_urls`      | "http://127.0.0.1:8551" | The elc execution url                                                                                               |
 | `lodestar_validator_beaconnodes` | "http://lodestar-beacon:9596" | The beacon endpoint for the validator to use                                                                |
