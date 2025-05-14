@@ -1,13 +1,13 @@
 ---
 - name: Ensure lodestar group exists
-  group:
+  ansible.builtin.group:
     name: "{{ lodestar_group }}"
     state: present
   become: true
   register: lodestar_group_details
 
 - name: Create lodestar user
-  user:
+  ansible.builtin.user:
     comment: lodestar client user
     name: "{{ lodestar_user }}"
     group: "{{ lodestar_group }}"
@@ -15,7 +15,7 @@
   register: lodestar_user_details
 
 - name: Create directories
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     owner: "{{ lodestar_user }}"
@@ -28,7 +28,7 @@
   become: true
 
 - name: Setup logrotate
-  template:
+  ansible.builtin.template:
     src: "logrotate/lodestar"
     dest: "/etc/logrotate.d/lodestar"
   become: true
@@ -45,7 +45,7 @@
   become_method: sudo
 
 - name: Create docker-compose.yml file
-  template:
+  ansible.builtin.template:
     src: lodestar-compose.yml.j2
     dest: "{{ lodestar_base_dir }}/docker-compose.yml"
     owner: "{{ lodestar_user }}"
