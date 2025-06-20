@@ -6,11 +6,11 @@
       when: lodestar_version is not defined
 
 - name: Get IP address to bind to if not provided
-  include_tasks: "network.yml"
+  ansible.builtin.include_tasks: "network.yml"
   when: not lodestar_host_ip
 
 - name: Install lodestar
-  include_tasks: "install.yml"
+  ansible.builtin.include_tasks: "install.yml"
 
 - name: Set version info on a local file
-  include_tasks: "tags.yml"
+  ansible.builtin.include_tasks: "tags.yml"
