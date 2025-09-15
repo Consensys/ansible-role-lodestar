@@ -20,6 +20,7 @@
     state: directory
     owner: "{{ lodestar_user }}"
     group: "{{ lodestar_group }}"
+    recurse: true
   loop:
     - "{{ lodestar_base_dir }}"
     - "{{ lodestar_config_dir }}"
