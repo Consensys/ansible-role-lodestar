@@ -2,6 +2,8 @@
 # User and group
 lodestar_user: lodestar
 lodestar_group: "{{ lodestar_user }}"
+lodestar_uid: 1525
+lodestar_gid: 1525
 
 # Directory paths
 lodestar_image: "chainsafe/lodestar"

@@ -1,7 +1,38 @@
 ---
+- name: Lookup lodestar user
+  getent:
+    database: passwd
+    key: "{{ lodestar_user }}"
+  register: lodestar_user_entry
+  failed_when: false
+
+- name: Extract current UID (only if user exists)
+  set_fact:
+    lodestar_current_uid: "{{ lodestar_user_entry.ansible_facts.getent_passwd[lodestar_user][1] | int }}"
+  when: not lodestar_user_entry.failed
+
+- name: Determine if UID update is needed
+  set_fact:
+    lodestar_uid_needs_update: "{{ lodestar_current_uid != lodestar_uid }}"
+  when: not lodestar_user_entry.failed
+
+- name: Stop lodestar  if UID needs update
+  ansible.builtin.command:
+    chdir: "{{ lodestar_base_dir }}"
+    cmd: "docker compose down"
+    # Docker compose does not removes this file. This is used to prevent running command
+    # if docker-compose.yml does not present
+    removes: "{{ lodestar_base_dir }}/docker-compose.yml"
+  become: true
+  become_method: sudo
+  when:
+    - not lodestar_user_entry.failed
+    - lodestar_uid_needs_update
+
 - name: Ensure lodestar group exists
   ansible.builtin.group:
     name: "{{ lodestar_group }}"
+    gid: "{{ lodestar_gid }}"    
     state: present
   become: true
   register: lodestar_group_details
@@ -10,6 +41,7 @@
   ansible.builtin.user:
     comment: lodestar client user
     name: "{{ lodestar_user }}"
+    uid: "{{ lodestar_uid }}"    
     group: "{{ lodestar_group }}"
   become: true
   register: lodestar_user_details
