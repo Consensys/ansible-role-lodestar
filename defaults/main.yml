@@ -30,7 +30,8 @@ lodestar_beacon_enabled: True
 lodestar_validator_enabled: False
 lodestar_validator_beaconnodes: "http://lodestar-beacon:9596"
 lodestar_validator_force: False
-lodestar_checkpoint_sync_url: "https://beaconstate-{{ lodestar_network }}.chainsafe.io"
+lodestar_checkpoint_sync_url: "{{ 'https://sync-mainnet.beaconcha.in' if lodestar_network == 'mainnet' else 'https://checkpoint-sync.' + lodestar_network + '.ethpandaops.io' }}"
+
 lodestar_default_fee_recipient: ""
 
 #metrics
