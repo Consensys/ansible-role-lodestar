@@ -1,8 +1,6 @@
-version: '3.6'
-
 services:
 
-{% if lodestar_beacon_enabled|bool == True  %}
+{% if lodestar_beacon_enabled | bool %}
 
   lodestar-beacon:
     container_name: lodestar-beacon
@@ -22,11 +20,11 @@ services:
       - {{ item }}
 {% endfor %}
 {% endif %}
-    user: "{{ lodestar_user_details.uid}}:{{ lodestar_group_details.gid }}"
+    user: "{{ lodestar_user_details.uid }}:{{ lodestar_group_details.gid }}"
     volumes:
       - {{ lodestar_data_dir }}:/data
       - {{ lodestar_config_dir }}:/config
-      - {{ lodestar_jwt_auth_file}}:/jwt/jwt-secret.hex:ro
+      - {{ lodestar_jwt_auth_file }}:/jwt/jwt-secret.hex:ro
       - {{ lodestar_log_dir }}:/log
     command: >-
       beacon
@@ -36,17 +34,17 @@ services:
       --port={{ lodestar_p2p_port }}
       --execution.urls={{ lodestar_execution_urls }}
       --checkpointSyncUrl={{ lodestar_checkpoint_sync_url }}
-{% if lodestar_default_fee_recipient != ""  %}
+{% if lodestar_default_fee_recipient != "" %}
       --suggestedFeeRecipient={{ lodestar_default_fee_recipient }}
 {% endif %}
-{% if lodestar_rest_enabled|bool == True  %}
+{% if lodestar_rest_enabled | bool %}
       --rest=true
       --rest.address="{{ lodestar_rest_interface }}"
       --rest.port={{ lodestar_rest_port }}
       --rest.cors="{{ lodestar_rest_cors }}"
       --rest.namespace="{{ lodestar_rest_namespace }}"
 {% endif %}
-{% if lodestar_metrics_enabled|bool == True  %}
+{% if lodestar_metrics_enabled | bool %}
       --metrics=true
       --metrics.address="{{ lodestar_metrics_interface }}"
       --metrics.port={{ lodestar_metrics_port }}
@@ -59,7 +57,7 @@ services:
 {% endif %}
 
 
-{% if lodestar_validator_enabled|bool == True  %}
+{% if lodestar_validator_enabled | bool %}
 
   lodestar-validator:
     container_name: lodestar-validator
@@ -69,11 +67,11 @@ services:
 {% if lodestar_validator_network_mode == "host" %}
     network_mode: "{{ lodestar_validator_network_mode }}"
 {% endif %}
-    user: "{{ lodestar_user_details.uid}}:{{ lodestar_group_details.gid }}"
+    user: "{{ lodestar_user_details.uid }}:{{ lodestar_group_details.gid }}"
     volumes:
       - {{ lodestar_data_dir }}:/data
       - {{ lodestar_config_dir }}:/config
-      - {{ lodestar_jwt_auth_file}}:/jwt/jwt-secret.hex:ro
+      - {{ lodestar_jwt_auth_file }}:/jwt/jwt-secret.hex:ro
       - {{ lodestar_log_dir }}:/log
     command: >-
       validator
@@ -82,22 +80,22 @@ services:
       --server={{ lodestar_validator_beaconnodes }}
       --keystoresDir="{{ lodestar_keystores_dir }}"
       --secretsDir="{{ lodestar_secrets_dir }}"
-{% if lodestar_default_fee_recipient != ""  %}
+{% if lodestar_default_fee_recipient != "" %}
       --suggestedFeeRecipient={{ lodestar_default_fee_recipient }}
 {% endif %}
-{% if lodestar_graffiti != ""  %}
+{% if lodestar_graffiti != "" %}
       --graffiti="{{ lodestar_graffiti }}"
 {% endif %}
-{% if lodestar_keymanager_api_enabled|bool == True  %}
+{% if lodestar_keymanager_api_enabled | bool %}
       --keymanager=true
       --keymanager.address="{{ lodestar_keymanager_interface }}"
       --keymanager.port={{ lodestar_keymanager_port }}
       --keymanager.cors="{{ lodestar_keymanager_cors }}"
 {% endif %}
-{% if lodestar_enable_doppelganger_protection|bool == True %}
+{% if lodestar_enable_doppelganger_protection | bool %}
       --doppelgangerProtectionEnabled=true
 {% endif %}
-{% if lodestar_validator_force|bool == True %}
+{% if lodestar_validator_force | bool %}
       --force=true
 {% endif %}
       --logLevel={{ lodestar_log_level }}

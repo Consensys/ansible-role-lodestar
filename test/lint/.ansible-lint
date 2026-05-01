@@ -1,7 +1,6 @@
-exclude_paths: []
-parseable: true
-use_default_rules: true
-verbosity: true
+---
+profile: production
+warn_list:
+  - yaml[truthy]
 skip_list:
-  - '204'
-
+  - yaml[line-length]

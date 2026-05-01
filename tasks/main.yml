@@ -1,16 +1,17 @@
 ---
 - name: Ensure we have sane configuration
   block:
-    - fail:
+    - name: Fail if lodestar_version is not defined
+      ansible.builtin.fail:
         msg: You must set "lodestar_version" for this role to run
       when: lodestar_version is not defined
 
 - name: Fetch architecture of the host
-  debug:
+  ansible.builtin.debug:
     var: ansible_facts.architecture
 
 - name: Set system architecture to download appropriate binary
-  set_fact:
+  ansible.builtin.set_fact:
     lodestar_architecture: "{{ 'arm64' if ansible_facts.architecture == 'aarch64' else 'amd64' }}"
 
 - name: Get IP address to bind to if not provided

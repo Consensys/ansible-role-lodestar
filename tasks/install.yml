@@ -1,43 +1,42 @@
 ---
 - name: Lookup lodestar user
-  getent:
+  ansible.builtin.getent:
     database: passwd
     key: "{{ lodestar_user }}"
   register: lodestar_user_entry
   failed_when: false
 
 - name: install | Determine if lodestar user exists
-  set_fact:
+  ansible.builtin.set_fact:
     lodestar_user_exists: "{{ lodestar_user in (lodestar_user_entry.ansible_facts.getent_passwd | default({})) }}"
 
-- block:
+- name: Handle existing user UID update
+  block:
+    - name: Extract current UID (only if user exists)
+      ansible.builtin.set_fact:
+        lodestar_current_uid: "{{ lodestar_user_entry.ansible_facts.getent_passwd[lodestar_user][1] | int }}"
 
-  - name: Extract current UID (only if user exists)
-    set_fact:
-      lodestar_current_uid: "{{ lodestar_user_entry.ansible_facts.getent_passwd[lodestar_user][1] | int }}"
+    - name: Determine if UID update is needed
+      ansible.builtin.set_fact:
+        lodestar_uid_needs_update: "{{ lodestar_current_uid != lodestar_uid }}"
 
-  - name: Determine if UID update is needed
-    set_fact:
-      lodestar_uid_needs_update: "{{ lodestar_current_uid != lodestar_uid }}"
-
-  - name: Stop lodestar  if UID needs update
-    ansible.builtin.command:
-      chdir: "{{ lodestar_base_dir }}"
-      cmd: "docker compose down"
-      # Docker compose does not removes this file. This is used to prevent running command
-      # if docker-compose.yml does not present
-      removes: "{{ lodestar_base_dir }}/docker-compose.yml"
-    become: true
-    become_method: sudo
-    when:
-      - lodestar_uid_needs_update
+    - name: Stop lodestar if UID needs update
+      ansible.builtin.command:
+        chdir: "{{ lodestar_base_dir }}"
+        cmd: "docker compose down"
+        # Docker compose does not remove this file. This is used to prevent running command
+        # if docker-compose.yml is not present.
+        removes: "{{ lodestar_base_dir }}/docker-compose.yml"
+      become: true
+      when:
+        - lodestar_uid_needs_update
 
   when: lodestar_user_exists
 
 - name: Ensure lodestar group exists
   ansible.builtin.group:
     name: "{{ lodestar_group }}"
-    gid: "{{ lodestar_gid }}"    
+    gid: "{{ lodestar_gid }}"
     state: present
   become: true
   register: lodestar_group_details
@@ -46,7 +45,7 @@
   ansible.builtin.user:
     comment: lodestar client user
     name: "{{ lodestar_user }}"
-    uid: "{{ lodestar_uid }}"    
+    uid: "{{ lodestar_uid }}"
     group: "{{ lodestar_group }}"
   become: true
   register: lodestar_user_details
@@ -76,11 +75,10 @@
   ansible.builtin.command:
     chdir: "{{ lodestar_base_dir }}"
     cmd: "docker compose down"
-    # Docker compose does not removes this file. This is used to prevent running command
-    # if docker-compose.yml does not present
+    # Docker compose does not remove this file. This is used to prevent running command
+    # if docker-compose.yml is not present.
     removes: "{{ lodestar_base_dir }}/docker-compose.yml"
   become: true
-  become_method: sudo
 
 - name: Create docker-compose.yml file
   ansible.builtin.template:
@@ -88,21 +86,20 @@
     dest: "{{ lodestar_base_dir }}/docker-compose.yml"
     owner: "{{ lodestar_user }}"
     group: "{{ lodestar_group }}"
-    mode: 0644
-  become: yes
+    mode: '0644'
+  become: true
 
 - name: Give access to docker.sock
-  acl:
+  ansible.posix.acl:
     path: /var/run/docker.sock
     entity: 1000
     etype: user
     permissions: rw
     state: present
-  become: yes
+  become: true
 
 - name: Restart lodestar
   ansible.builtin.command:
     chdir: "{{ lodestar_base_dir }}"
     cmd: "docker compose up -d"
   become: true
-  become_method: sudo

@@ -5,23 +5,20 @@ galaxy_info:
   description: lodestar is an open-source ethereum 2 client
   company: Consensys
   license: license (Apache)
-  min_ansible_version: 2.6
+  min_ansible_version: 2.18
   platforms:
     - name: Debian
       versions:
         - bookworm
         - bullseye
-        - buster
     - name: Ubuntu
       versions:
+        - noble
         - jammy
-        - bionic
-        - xenial
     - name: Fedora
       versions:
-        - 39
-        - 38
-        - 37
+        - 42
+        - 41
   galaxy_tags:
     - lodestar
     - blockchain

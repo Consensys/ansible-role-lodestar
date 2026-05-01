@@ -26,30 +26,30 @@ lodestar_host_ip: ""
 lodestar_network: mainnet
 lodestar_p2p_port: 9000
 lodestar_execution_urls: "http://127.0.0.1:8551"
-lodestar_beacon_enabled: True
-lodestar_validator_enabled: False
+lodestar_beacon_enabled: true
+lodestar_validator_enabled: false
 lodestar_validator_beaconnodes: "http://lodestar-beacon:9596"
-lodestar_validator_force: False
+lodestar_validator_force: false
 lodestar_checkpoint_sync_url: "{{ 'https://sync-mainnet.beaconcha.in' if lodestar_network == 'mainnet' else 'https://checkpoint-sync.' + lodestar_network + '.ethpandaops.io' }}"
 
 lodestar_default_fee_recipient: ""
 
-#metrics
-lodestar_metrics_enabled: "True"
+# metrics
+lodestar_metrics_enabled: true
 lodestar_metrics_interface: 0.0.0.0
 lodestar_metrics_port: 8008
 
 # rest
 lodestar_rest_port: 5051
-lodestar_rest_enabled: "True"
+lodestar_rest_enabled: true
 lodestar_rest_interface: "0.0.0.0"
 lodestar_rest_cors: "*"
 lodestar_rest_namespace: "beacon,config,events,node,validator,lightclient"
 lodestar_graffiti: ""
 
 # keymanager
-lodestar_enable_doppelganger_protection: "True"
-lodestar_keymanager_api_enabled: "False"
+lodestar_enable_doppelganger_protection: true
+lodestar_keymanager_api_enabled: false
 lodestar_keymanager_interface: "127.0.0.1"
 lodestar_keymanager_port: 5062
 lodestar_keymanager_cors: "*"
