@@ -1,5 +1,5 @@
 ---
-- name: Lookup lodestar user
+- name: install | Lookup lodestar user
   ansible.builtin.getent:
     database: passwd
     key: "{{ lodestar_user }}"
@@ -10,30 +10,43 @@
   ansible.builtin.set_fact:
     lodestar_user_exists: "{{ lodestar_user in (lodestar_user_entry.ansible_facts.getent_passwd | default({})) }}"
 
-- name: Handle existing user UID update
+- name: install | If lodestar user exists - check if the UID matches the expected value
+  when: lodestar_user_exists | bool
   block:
-    - name: Extract current UID (only if user exists)
+    - name: install | Extract current UID
       ansible.builtin.set_fact:
         lodestar_current_uid: "{{ lodestar_user_entry.ansible_facts.getent_passwd[lodestar_user][1] | int }}"
 
-    - name: Determine if UID update is needed
+    - name: install | Determine if UID update is needed
       ansible.builtin.set_fact:
         lodestar_uid_needs_update: "{{ lodestar_current_uid != lodestar_uid }}"
 
-    - name: Stop lodestar if UID needs update
-      ansible.builtin.command:
-        chdir: "{{ lodestar_base_dir }}"
-        cmd: "docker compose down"
-        # Docker compose does not remove this file. This is used to prevent running command
-        # if docker-compose.yml is not present.
-        removes: "{{ lodestar_base_dir }}/docker-compose.yml"
-      become: true
-      when:
-        - lodestar_uid_needs_update
+- name: install | Check if docker-compose.yml exists
+  ansible.builtin.stat:
+    path: "{{ lodestar_base_dir }}/docker-compose.yml"
+  register: lodestar_compose_stat
 
-  when: lodestar_user_exists
+# This will ignore the case when lodestar is manually stopped - it assumes that is a mistake
+# If you are manually stopping and updating lodestar - remove the docker-compose.yml file first
+- name: install | Debug lodestar compose file state
+  ansible.builtin.debug:
+    var: lodestar_compose_stat.stat.exists
 
-- name: Ensure lodestar group exists
+- name: install | Stop lodestar if deployed or UID update is needed
+  ansible.builtin.command:
+    chdir: "{{ lodestar_base_dir }}"
+    cmd: "docker compose down"
+  become: true
+  register: lodestar_compose_stopped
+  when: lodestar_compose_stat.stat.exists or (lodestar_uid_needs_update | default(false) | bool)
+
+- name: install | Set updated optionally to trigger a restart at the end
+  ansible.builtin.set_fact:
+    lodestar_state_updates: "{{ (lodestar_state_updates | default([])) + ['lodestar.running_service'] }}"
+  when: (lodestar_compose_stopped is defined) and
+        (lodestar_compose_stopped.changed | default(false))
+
+- name: install | Ensure lodestar group exists
   ansible.builtin.group:
     name: "{{ lodestar_group }}"
     gid: "{{ lodestar_gid }}"
@@ -41,7 +54,7 @@
   become: true
   register: lodestar_group_details
 
-- name: Create lodestar user
+- name: install | Create lodestar user
   ansible.builtin.user:
     comment: lodestar client user
     name: "{{ lodestar_user }}"
@@ -50,7 +63,7 @@
   become: true
   register: lodestar_user_details
 
-- name: Create directories
+- name: install | Create directories
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
@@ -64,23 +77,13 @@
     - "{{ lodestar_log_dir }}"
   become: true
 
-- name: Setup logrotate
+- name: install | Setup logrotate
   ansible.builtin.template:
     src: "logrotate/lodestar"
     dest: "/etc/logrotate.d/lodestar"
   become: true
 
-# Running as root. App user might not have permission at this point
-- name: Stop lodestar
-  ansible.builtin.command:
-    chdir: "{{ lodestar_base_dir }}"
-    cmd: "docker compose down"
-    # Docker compose does not remove this file. This is used to prevent running command
-    # if docker-compose.yml is not present.
-    removes: "{{ lodestar_base_dir }}/docker-compose.yml"
-  become: true
-
-- name: Create docker-compose.yml file
+- name: install | Create docker-compose.yml file
   ansible.builtin.template:
     src: lodestar-compose.yml.j2
     dest: "{{ lodestar_base_dir }}/docker-compose.yml"
@@ -88,8 +91,14 @@
     group: "{{ lodestar_group }}"
     mode: '0644'
   become: true
+  register: lodestar_compose_template
 
-- name: Give access to docker.sock
+- name: install | Set updated to trigger restart if compose file changed
+  ansible.builtin.set_fact:
+    lodestar_state_updates: "{{ (lodestar_state_updates | default([])) + ['lodestar.running_service'] }}"
+  when: lodestar_compose_template.changed
+
+- name: install | Give access to docker.sock
   ansible.posix.acl:
     path: /var/run/docker.sock
     entity: 1000
@@ -98,8 +107,9 @@
     state: present
   become: true
 
-- name: Restart lodestar
+- name: install | Start lodestar
   ansible.builtin.command:
     chdir: "{{ lodestar_base_dir }}"
     cmd: "docker compose up -d"
   become: true
+  when: "'lodestar.running_service' in lodestar_state_updates"

@@ -1,25 +1,25 @@
 ---
-- name: Ensure we have sane configuration
+- name: main | Ensure we have sane configuration
   block:
-    - name: Fail if lodestar_version is not defined
+    - name: main | Fail if lodestar_version is not defined
       ansible.builtin.fail:
         msg: You must set "lodestar_version" for this role to run
       when: lodestar_version is not defined
 
-- name: Fetch architecture of the host
+- name: main | Fetch architecture of the host
   ansible.builtin.debug:
     var: ansible_facts.architecture
 
-- name: Set system architecture to download appropriate binary
+- name: main | Set system architecture to download appropriate binary
   ansible.builtin.set_fact:
     lodestar_architecture: "{{ 'arm64' if ansible_facts.architecture == 'aarch64' else 'amd64' }}"
 
-- name: Get IP address to bind to if not provided
+- name: main | Get IP address to bind to if not provided
   ansible.builtin.include_tasks: "network.yml"
   when: not lodestar_host_ip
 
-- name: Install lodestar
+- name: main | Install lodestar
   ansible.builtin.include_tasks: "install.yml"
 
-- name: Set version info on a local file
+- name: main | Set version info on a local file
   ansible.builtin.include_tasks: "tags.yml"

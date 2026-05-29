@@ -1,4 +1,6 @@
 ---
+lodestar_state_updates: []
+
 # User and group
 lodestar_user: lodestar
 lodestar_group: "{{ lodestar_user }}"
